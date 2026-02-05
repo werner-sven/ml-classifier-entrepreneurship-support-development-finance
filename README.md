@@ -1,8 +1,8 @@
 # Measuring Entrepreneurship-Support Development Finance (ESDF)
 
-Estimating entrepreneurship-support development finance (ESDF) from textual project descriptions in OECD CRS data using a fine-tuned transformer classifier.
+Identifying entrepreneurship-support development finance (ESDF) from textual project descriptions in OECD CRS data using a fine-tuned transformer classifier.
 
-This repository contains the underlying code for the machine learning classifier for the scientific paper "From Portfolio Targeting to Entrepreneurial Dynamics: Evidence from a New Measure of Entrepreneurship-Support Development Finance" by Sven Werner and Philipp Trotter.
+This repository contains the underlying code for the machine learning classifier of the scientific paper "From Portfolio Targeting to Entrepreneurial Dynamics: Evidence from a New Measure of Entrepreneurship-Support Development Finance" by Sven Werner and Philipp Trotter.
 
 How to work with this repository:
 
@@ -13,6 +13,7 @@ Python Interpreter: Python 3.10+
 Install required packages:
 
 ```shell
+python -m pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
