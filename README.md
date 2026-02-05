@@ -8,7 +8,7 @@ How to work with this repository:
 
 # Installation
 
-Python Interpreter: Python 3.10+
+Python Interpreter: Python 3.12+
 
 Install required packages:
 
