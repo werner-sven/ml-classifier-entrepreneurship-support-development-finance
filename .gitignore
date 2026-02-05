@@ -28,6 +28,8 @@ data/**
 outputs/**
 
 # But keep this specific small file
+!data/
+!data/01_raw/
 !data/01_raw/gold_labeled.xlsx
 
 # Scripts not for public
