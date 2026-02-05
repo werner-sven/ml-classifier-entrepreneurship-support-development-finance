@@ -19,9 +19,9 @@ pip install -r requirements.txt
 
 # Data
 
-* Download preprocessed OECD CRS data: https://1drv.ms/u/c/eb405fe4e29e9bf9/IQBsHu5WgB7UQJ6uhzlIM1duAewEf2vuGpgmXBxin37qD20?e=OgK2Cb 
+* Download preprocessed OECD CRS data: https://zenodo.org/records/18498599 
 * Save Parquet File under `data/01_raw/`
-* Original data is publicly available on the OECD's data explorer in the download tab: https://shorturl.at/gnZJc 
+* The raw development finance data is publicly available on the OECD's data explorer: https://data-explorer.oecd.org/
 * Data paths are configured in `config.json`.
 
 # Required inputs
