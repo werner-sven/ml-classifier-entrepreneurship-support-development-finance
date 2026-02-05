@@ -1,0 +1,21 @@
+# Core data handling
+numpy==2.4.1
+pandas==2.3.3
+pyarrow==23.0.0
+openpyxl==3.1.5
+
+# ML utilities / metrics / plotting
+scikit-learn==1.8.0
+scipy==1.17.0
+matplotlib==3.10.8
+
+# NLP / Transformers stack
+transformers==4.57.6
+datasets==4.5.0
+accelerate==1.12.0
+tokenizers==0.22.2
+huggingface-hub==0.36.0
+safetensors==0.7.0
+
+# Deep learning backend
+torch==2.9.1+cpu
