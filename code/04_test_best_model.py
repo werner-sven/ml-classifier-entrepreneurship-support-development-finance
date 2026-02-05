@@ -193,6 +193,7 @@ fig.tight_layout()
 fig.savefig(OUT_CM_PNG, dpi=220)
 plt.close(fig)
 
+EXPORT_CM_PNG.parent.mkdir(parents=True, exist_ok=True)
 shutil.copy2(OUT_CM_PNG, EXPORT_CM_PNG)
 
 # Examples (5 each)

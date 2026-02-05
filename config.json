@@ -2,7 +2,7 @@
   "CSV_SEP": "|",
   "PARQUET_ENGINE": "pyarrow",
   "SEED": 42,
-  "SAMPLE_LIMIT": 2000,
+  "SAMPLE_LIMIT": null,
 
   "DIRS": {
     "DATA_RAW": "data/01_raw",

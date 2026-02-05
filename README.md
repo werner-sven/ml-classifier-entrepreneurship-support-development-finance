@@ -2,7 +2,7 @@
 
 Estimating entrepreneurship-support development finance (ESDF) from textual project descriptions in OECD CRS data using a fine-tuned transformer classifier.
 
-This repository contains the classification code underlying the paper draft “(title TBD)” by Sven Werner and Philipp Trotter.
+This repository contains the classification code underlying the paper “(title TBD)” by Sven Werner and Philipp Trotter.
 
 # Guideline
 
@@ -20,19 +20,22 @@ pip install -r requirements.txt
 
 ## Data
 
-Data paths are configured in `config.json`.
-
-Download needed data (CRS input and hand-coded gold labels) from https://1drv.ms/f/c/eb405fe4e29e9bf9/IgCGBUgKhpyaRZI0Pcfy3m9YAQ-jSJtJn6bmuQNAo6LqAAA?e=ffaPD3 . Save those in folder "data/01_raw".
+* Download preprocessed OECD CRS data: https://1drv.ms/u/c/eb405fe4e29e9bf9/IQBsHu5WgB7UQJ6uhzlIM1duAewEf2vuGpgmXBxin37qD20?e=OgK2Cb 
+* Save Parquet File under data/01_raw/
+* Original data is publicly available on the OECD's data explorer in the download tab: https://shorturl.at/gnZJc 
+* Data paths are configured in `config.json`.
 
 ### Required inputs
 
-1. **CRS input parquet** (`FILES.CRS_PARQUET`, default: `data/01_raw/crs_en.parquet`)
+1. **CRS input PARQUET** (`FILES.CRS_PARQUET`, default: `data/01_raw/crs_en.parquet`)
 
-   * Must contain a text column `raw_text` which represents the English input strin**g** used for classification (e.g., concatenated title + descriptions, with non-English text translated upstream). Our preprocessed dataset is stored under the default input in this repo. Original data is publicly available on the OECD's data explorer in the download tab: https://shorturl.at/gnZJc 
+   * Must contain a text column `raw_text` which represents the English input strin**g** used for classification (e.g., concatenated title + descriptions, with non-English text translated upstream). 
+   * The preprocessed dataset needs to be stored under `data/01_raw/`. 
 
 2. **Gold labels** (`FILES.GOLD_LABELED`, default: `data/01_raw/gold_labeled.xlsx`)
 
-   * The default input contains the file with our labelled data. File must contain columns:
+   * Our handcoded gold data is contained in the repo under the respective link. 
+   * File must contain columns:
 
      * `ProjectDesc` (text)
      * `gold_es` (binary label 0/1)
@@ -47,12 +50,13 @@ Run all steps sequentially:
 python code/run_all.py
 ```
 
-Note: Step 5 (using the finetuned classifier to predict the full dataset) is computationally heavy as there are >1.5 mio unique descriptions to predict. To only replicate model training and testing run steps 1-4. 
-Further, for repeated runs, ensure that the folder output/02_best_model is empty to avoid confusion between model selection between multiple runs.
+Notes:
+* Step 5 (using the finetuned classifier to predict the full dataset) is computationally heavy as there are >1.5 mio unique descriptions to predict. 
+* To only replicate model training and testing run steps 0-4. 
+* For repeated runs, ensure that the folder output/02_best_model is empty to avoid confusion between model selection between multiple runs.
 
 
 ## Pipeline steps (01..06)
-
 ### 01 — Extract unique project descriptions
 
 Builds a unique table of project descriptions to classify once per unique text:
