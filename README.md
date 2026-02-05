@@ -2,13 +2,11 @@
 
 Estimating entrepreneurship-support development finance (ESDF) from textual project descriptions in OECD CRS data using a fine-tuned transformer classifier.
 
-This repository contains the classification code underlying the paper “(title TBD)” by Sven Werner and Philipp Trotter.
+This repository contains the underlying code for the machine learning classifier for the scientific paper "From Portfolio Targeting to Entrepreneurial Dynamics: Evidence from a New Measure of Entrepreneurship-Support Development Finance" by Sven Werner and Philipp Trotter.
 
-# Guideline
+How to work with this repository:
 
-How to work with this repository.
-
-## Installation
+# Installation
 
 Python Interpreter: Python 3.10+
 
@@ -18,14 +16,14 @@ Install required packages:
 pip install -r requirements.txt
 ```
 
-## Data
+# Data
 
 * Download preprocessed OECD CRS data: https://1drv.ms/u/c/eb405fe4e29e9bf9/IQBsHu5WgB7UQJ6uhzlIM1duAewEf2vuGpgmXBxin37qD20?e=OgK2Cb 
-* Save Parquet File under data/01_raw/
+* Save Parquet File under `data/01_raw/`
 * Original data is publicly available on the OECD's data explorer in the download tab: https://shorturl.at/gnZJc 
 * Data paths are configured in `config.json`.
 
-### Required inputs
+# Required inputs
 
 1. **CRS input PARQUET** (`FILES.CRS_PARQUET`, default: `data/01_raw/crs_en.parquet`)
 
@@ -40,7 +38,16 @@ pip install -r requirements.txt
      * `ProjectDesc` (text)
      * `gold_es` (binary label 0/1)
 
-## Usage
+
+# Usage
+* You can either run the full pipeline via python code/run_all.py or execute each step (01..06) separately (see below).
+
+* Note: The full pipeline is computationally heavy (processing a ~5.0 mio row dataset, fine-tuning three transformer models, and predicting ~1.5 mio unique project descriptions). Ensure sufficient computing power is available.
+
+* To replicate only model fine-tuning and testing, run steps 01–04 only.
+
+* For repeated runs, ensure that the folder output/02_best_model is empty to avoid confusion between model selection between multiple runs.
+
 
 ## Run full pipeline
 
@@ -49,11 +56,6 @@ Run all steps sequentially:
 ```shell
 python code/run_all.py
 ```
-
-Notes:
-* Step 5 (using the finetuned classifier to predict the full dataset) is computationally heavy as there are >1.5 mio unique descriptions to predict. 
-* To only replicate model training and testing run steps 0-4. 
-* For repeated runs, ensure that the folder output/02_best_model is empty to avoid confusion between model selection between multiple runs.
 
 
 ## Pipeline steps (01..06)
