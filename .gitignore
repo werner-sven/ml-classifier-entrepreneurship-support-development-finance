@@ -24,12 +24,13 @@ Thumbs.db
 .vscode/
 
 # Exclude data and output files (but keep the folders)
-data/**
+data/01_raw/
+data/02_interim/
+data/03_processed/
+
 outputs/**
 
 # But keep this specific small file
-!data/
-!data/01_raw/
 !data/01_raw/gold_labeled.xlsx
 
 # Scripts not for public
