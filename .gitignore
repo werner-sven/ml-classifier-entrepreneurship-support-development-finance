@@ -23,14 +23,20 @@ env/
 Thumbs.db
 .vscode/
 
-# Exclude data and output files (but keep the folders)
-data/01_raw/
-data/02_interim/
-data/03_processed/
-
+# Ignore everything under these folders
+data/01_raw/**
+data/02_interim/**
+data/03_processed/**
 outputs/**
 
-# But keep this specific small file
+# Re-allow the folders themselves (so Git can traverse into them)
+!data/
+!data/01_raw/
+!data/02_interim/
+!data/03_processed/
+!outputs/
+
+# Keep this specific small file
 !data/01_raw/gold_labeled.xlsx
 
 # Scripts not for public
