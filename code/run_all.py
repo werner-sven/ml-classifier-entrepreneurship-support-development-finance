@@ -22,7 +22,6 @@ PROJECT_ROOT, cfg = load_config(config_name="config.json")
 CODE_DIR = resolve_path(PROJECT_ROOT, cfg["DIRS"]["CODE_DIR"])
 
 SCRIPTS = [
-    "00_ingest_crs.py",
     "01_extract_unique_projectdesc.py",
     "02_split_gold_data.py",
     "03_train_models_eval.py",
