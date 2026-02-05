@@ -23,9 +23,12 @@ env/
 Thumbs.db
 .vscode/
 
-# Exclude data and output files
-data/
-outputs/
+# Exclude data and output files (but keep the folders)
+data/**
+outputs/**
+
+# But keep this specific small file
+!data/01_raw/gold_labeled.xlsx
 
 # Scripts not for public
 00_ingest_crs.py
