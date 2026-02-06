@@ -86,7 +86,7 @@ DEFAULT_MODEL_NAME = (
 
 HP_GRID: List[Dict[str, Any]] = train_cfg.get("HP_GRID") or [
     {"learning_rate": 2e-5, "batch_size_train": 8,  "batch_size_eval": 32, "num_epochs": 10, "weight_decay": 0.01,  "warmup_ratio": 0.1},
-    {"learning_rate": 2e-5, "batch_size_train": 16, "batch_size_eval": 32, "num_epochs": 10, "weight_decay": 0.01, "warmup_ratio": 0.05},
+    {"learning_rate": 2e-5, "batch_size_train": 16, "batch_size_eval": 32, "num_epochs": 10, "weight_decay": 0.01, "warmup_ratio": 0.1},
     {"learning_rate": 3e-5, "batch_size_train": 8, "batch_size_eval": 32, "num_epochs": 10, "weight_decay": 0.00, "warmup_ratio": 0.1}
 ]
 
