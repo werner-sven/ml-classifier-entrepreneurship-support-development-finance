@@ -77,7 +77,7 @@ TEXT_COL = "ProjectDesc"
 LABEL_COL = "gold_es"  # 0/1
 MAX_LENGTH = int(train_cfg.get("MAX_LENGTH", 256))
 
-SELECTION_METRIC = train_cfg.get("SELECTION_METRIC", "eval_f1_best")
+SELECTION_METRIC = train_cfg.get("SELECTION_METRIC", "eval_precision_thr")
 
 DEFAULT_MODEL_NAME = (
     train_cfg.get("MODEL_NAME")
@@ -85,9 +85,9 @@ DEFAULT_MODEL_NAME = (
 )
 
 HP_GRID: List[Dict[str, Any]] = train_cfg.get("HP_GRID") or [
-    {"learning_rate": 2e-5, "batch_size_train": 16,  "batch_size_eval": 32, "num_epochs": 20, "weight_decay": 0.01,  "warmup_ratio": 0.1},
-    {"learning_rate": 2e-5, "batch_size_train": 8, "batch_size_eval": 32, "num_epochs": 20, "weight_decay": 0.01, "warmup_ratio": 0.1},
-    {"learning_rate": 3e-5, "batch_size_train": 8, "batch_size_eval": 32, "num_epochs": 20, "weight_decay": 0.00, "warmup_ratio": 0.1}
+    {"learning_rate": 2e-5, "batch_size_train": 8,  "batch_size_eval": 32, "num_epochs": 10, "weight_decay": 0.01,  "warmup_ratio": 0.1},
+    {"learning_rate": 2e-5, "batch_size_train": 16, "batch_size_eval": 32, "num_epochs": 10, "weight_decay": 0.01, "warmup_ratio": 0.05},
+    {"learning_rate": 3e-5, "batch_size_train": 8, "batch_size_eval": 32, "num_epochs": 10, "weight_decay": 0.00, "warmup_ratio": 0.1}
 ]
 
 if not isinstance(HP_GRID, list) or not all(isinstance(x, dict) for x in HP_GRID):
@@ -134,6 +134,54 @@ def _tune_threshold_max_f1(y_true: np.ndarray, p_pos: np.ndarray) -> Dict[str, f
         "recall": float(recall_score(y_true, y_hat, zero_division=0)),
         "f1": float(f1_score(y_true, y_hat, zero_division=0)),
     }
+
+def _tune_threshold_max_precision(
+    y_true: np.ndarray,
+    p_pos: np.ndarray,
+    min_recall: float = 0.0,   # set >0 if you ever want to avoid ultra-low recall solutions
+) -> Dict[str, float]:
+    precision, recall, thresholds = precision_recall_curve(y_true, p_pos)
+
+    # thresholds has len = len(precision)-1; align by dropping last point
+    precision = precision[:-1]
+    recall = recall[:-1]
+
+    if thresholds.size == 0:
+        thr = 0.5
+    else:
+        # optional recall constraint
+        valid = recall >= float(min_recall)
+        if not np.any(valid):
+            valid = np.ones_like(recall, dtype=bool)
+
+        prec_valid = np.where(valid, precision, -1.0)
+        best_prec = float(np.max(prec_valid))
+        cand = np.where(prec_valid == best_prec)[0]
+
+        # tie-break 1: higher recall
+        if cand.size > 1:
+            best_rec = np.max(recall[cand])
+            cand = cand[recall[cand] == best_rec]
+
+        # tie-break 2: higher F1 (just to stabilize ties)
+        if cand.size > 1:
+            denom = precision[cand] + recall[cand]
+            f1 = np.where(denom > 0, 2 * precision[cand] * recall[cand] / denom, 0.0)
+            idx = int(cand[int(np.argmax(f1))])
+        else:
+            idx = int(cand[0])
+
+        thr = float(thresholds[idx])
+
+    y_hat = (p_pos >= thr).astype(int)
+    return {
+        "threshold": float(thr),
+        "accuracy": float(accuracy_score(y_true, y_hat)),
+        "precision": float(precision_score(y_true, y_hat, zero_division=0)),
+        "recall": float(recall_score(y_true, y_hat, zero_division=0)),
+        "f1": float(f1_score(y_true, y_hat, zero_division=0)),
+    }
+
 
 def _best_epoch_from_log_history(trainer: Trainer) -> float | None:
     best_metric = trainer.state.best_metric
@@ -258,7 +306,7 @@ for run_idx, hp in enumerate(HP_GRID, start=1):
         train_dataset=tok_train,
         eval_dataset=tok_eval,
         compute_metrics=compute_metrics,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=3, early_stopping_threshold=1e-5)],
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=2, early_stopping_threshold=1e-3)],
     )
 
     trainer.train()
@@ -272,7 +320,7 @@ for run_idx, hp in enumerate(HP_GRID, start=1):
     y_true = np.asarray(pred_out.label_ids).astype(int)
     p_pos = _softmax_pos_probs(logits)
 
-    tuned = _tune_threshold_max_f1(y_true, p_pos)
+    tuned = _tune_threshold_max_precision(y_true, p_pos)
 
     trainer.save_model(str(model_dir))
     tokenizer.save_pretrained(str(model_dir))

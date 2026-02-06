@@ -40,8 +40,8 @@
   },
 
   "SPLIT": {
-    "EVAL_SHARE": 0.075,
-    "TEST_SHARE": 0.075
+    "EVAL_SHARE": 0.1,
+    "TEST_SHARE": 0.1
   },
 
   "PREDICT": {

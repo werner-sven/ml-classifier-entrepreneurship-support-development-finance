@@ -41,3 +41,4 @@ outputs/**
 
 # Scripts not for public
 00_ingest_crs.py
+04_test_any_model.py
